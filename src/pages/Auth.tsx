@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Target, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Target, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { z } from 'zod';
 
 const authSchema = z.object({
@@ -19,9 +19,11 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string; confirmPassword?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; confirmPassword?: string; firstName?: string }>({});
 
   const { user, signIn, signUp } = useAuth();
   const navigate = useNavigate();
@@ -45,8 +47,13 @@ export default function Auth() {
       }
     }
 
-    if (!isLogin && password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+    if (!isLogin) {
+      if (password !== confirmPassword) {
+        newErrors.confirmPassword = 'Passwords do not match';
+      }
+      if (!firstName.trim()) {
+        newErrors.firstName = 'First name is required';
+      }
     }
 
     setErrors(newErrors);
@@ -75,7 +82,7 @@ export default function Auth() {
           navigate('/');
         }
       } else {
-        const { error } = await signUp(email, password);
+        const { error } = await signUp(email, password, firstName.trim(), lastName.trim());
         if (error) {
           if (error.message.includes('already registered')) {
             toast({
@@ -105,18 +112,18 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
-      <div className="w-full max-w-md animate-fade-in">
+      <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-primary text-primary-foreground mb-4">
-            <Target className="w-8 h-8" />
+          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground mb-4">
+            <Target className="w-6 h-6" />
           </div>
-          <h1 className="font-display text-2xl font-bold">HabitFlow</h1>
+          <h1 className="text-2xl font-semibold">HabitFlow</h1>
           <p className="text-muted-foreground text-sm mt-1">Build better habits, one day at a time</p>
         </div>
 
-        <Card className="border-border shadow-lg">
+        <Card className="border-border">
           <CardHeader className="text-center pb-4">
-            <CardTitle className="font-display text-xl">
+            <CardTitle className="text-xl font-semibold">
               {isLogin ? 'Welcome back' : 'Create your account'}
             </CardTitle>
             <CardDescription>
@@ -125,6 +132,38 @@ export default function Auth() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {!isLogin && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First name</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="firstName"
+                        type="text"
+                        placeholder="John"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className="pl-10"
+                        disabled={loading}
+                      />
+                    </div>
+                    {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Doe"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">

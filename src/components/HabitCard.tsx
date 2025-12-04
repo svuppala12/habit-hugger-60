@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, ChevronRight, Calendar, Repeat } from 'lucide-react';
+import { Check, ChevronRight, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface HabitCardProps {
@@ -34,35 +34,34 @@ export function HabitCard({
               onToggle();
             }}
             className={cn(
-              "flex items-center justify-center w-20 sm:w-24 shrink-0 transition-all duration-300",
+              "flex items-center justify-center w-16 sm:w-20 shrink-0 transition-colors duration-200",
               completedToday 
                 ? "bg-success" 
-                : "bg-muted hover:bg-primary/10"
+                : "bg-muted hover:bg-muted/80"
             )}
           >
             <div className={cn(
-              "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all",
+              "w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors",
               completedToday 
                 ? "bg-success-foreground/20 border-success-foreground/30" 
                 : "border-border bg-background"
             )}>
               {completedToday && (
-                <Check className="w-5 h-5 text-success-foreground animate-check" />
+                <Check className="w-4 h-4 text-success-foreground" />
               )}
             </div>
           </button>
 
           <Link to={`/habits/${id}`} className="flex-1 p-4 flex items-center justify-between group">
             <div className="min-w-0">
-              <h3 className="font-display font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+              <h3 className="font-medium text-foreground truncate group-hover:text-primary transition-colors">
                 {name}
               </h3>
               {description && (
                 <p className="text-sm text-muted-foreground truncate mt-0.5">{description}</p>
               )}
-              <div className="flex items-center gap-3 mt-2">
-                <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Repeat className="w-3 h-3" />
+              <div className="flex items-center gap-3 mt-1.5">
+                <span className="text-xs text-muted-foreground capitalize">
                   {frequency}
                 </span>
                 {streak > 0 && (

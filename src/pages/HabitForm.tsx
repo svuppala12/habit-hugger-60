@@ -1,22 +1,39 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { useHabits, Habit } from '@/hooks/useHabits';
+import { useHabits } from '@/hooks/useHabits';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
+import { cn } from '@/lib/utils';
 
 const habitSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
   description: z.string().max(500, 'Description must be less than 500 characters').optional(),
-  frequency: z.enum(['daily', 'weekly']),
+  frequency: z.enum(['daily', 'weekdays', 'weekends', 'custom']),
 });
+
+const DAYS = [
+  { key: 'mon', label: 'M' },
+  { key: 'tue', label: 'T' },
+  { key: 'wed', label: 'W' },
+  { key: 'thu', label: 'T' },
+  { key: 'fri', label: 'F' },
+  { key: 'sat', label: 'S' },
+  { key: 'sun', label: 'S' },
+];
+
+const FREQUENCY_OPTIONS = [
+  { value: 'daily', label: 'Every day', days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] },
+  { value: 'weekdays', label: 'Weekdays', days: ['mon', 'tue', 'wed', 'thu', 'fri'] },
+  { value: 'weekends', label: 'Weekends', days: ['sat', 'sun'] },
+  { value: 'custom', label: 'Custom', days: [] },
+];
 
 export default function HabitForm() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +46,7 @@ export default function HabitForm() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [frequency, setFrequency] = useState('daily');
+  const [selectedDays, setSelectedDays] = useState<string[]>(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']);
   const [loading, setLoading] = useState(false);
   const [fetchingHabit, setFetchingHabit] = useState(isEditing);
   const [errors, setErrors] = useState<{ name?: string; description?: string }>({});
@@ -55,12 +73,36 @@ export default function HabitForm() {
         setName(data.name);
         setDescription(data.description || '');
         setFrequency(data.frequency);
+        
+        // Set selected days based on frequency
+        const option = FREQUENCY_OPTIONS.find(o => o.value === data.frequency);
+        if (option && data.frequency !== 'custom') {
+          setSelectedDays(option.days);
+        }
+        
         setFetchingHabit(false);
       };
 
       fetchHabit();
     }
   }, [id, isEditing, navigate, toast]);
+
+  const handleFrequencyChange = (value: string) => {
+    setFrequency(value);
+    const option = FREQUENCY_OPTIONS.find(o => o.value === value);
+    if (option && value !== 'custom') {
+      setSelectedDays(option.days);
+    }
+  };
+
+  const toggleDay = (day: string) => {
+    setFrequency('custom');
+    setSelectedDays(prev => 
+      prev.includes(day) 
+        ? prev.filter(d => d !== day)
+        : [...prev, day]
+    );
+  };
 
   const validateForm = () => {
     try {
@@ -115,7 +157,7 @@ export default function HabitForm() {
   if (fetchingHabit) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Loading habit...</div>
+        <div className="text-muted-foreground">Loading habit...</div>
       </div>
     );
   }
@@ -133,9 +175,9 @@ export default function HabitForm() {
         </Link>
       </Button>
 
-      <Card className="animate-fade-in">
+      <Card>
         <CardHeader>
-          <CardTitle className="font-display text-xl">
+          <CardTitle className="text-xl font-semibold">
             {isEditing ? 'Edit Habit' : 'Create New Habit'}
           </CardTitle>
           <CardDescription>
@@ -145,7 +187,7 @@ export default function HabitForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="name">Habit Name</Label>
               <Input
@@ -173,20 +215,48 @@ export default function HabitForm() {
               {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="frequency">Frequency</Label>
-              <Select value={frequency} onValueChange={setFrequency} disabled={loading}>
-                <SelectTrigger id="frequency">
-                  <SelectValue placeholder="Select frequency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="space-y-3">
+              <Label>Frequency</Label>
+              <div className="flex flex-wrap gap-2">
+                {FREQUENCY_OPTIONS.slice(0, 3).map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => handleFrequencyChange(option.value)}
+                    disabled={loading}
+                    className={cn(
+                      "px-3 py-1.5 text-sm rounded-md border transition-colors",
+                      frequency === option.value
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-background text-foreground border-border hover:bg-muted"
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              
+              <div className="flex gap-1.5 pt-2">
+                {DAYS.map((day, index) => (
+                  <button
+                    key={day.key}
+                    type="button"
+                    onClick={() => toggleDay(day.key)}
+                    disabled={loading}
+                    className={cn(
+                      "w-9 h-9 rounded-full text-sm font-medium transition-colors",
+                      selectedDays.includes(day.key)
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    )}
+                  >
+                    {day.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-2">
               <Button type="submit" className="flex-1" disabled={loading}>
                 {loading ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Habit'}
               </Button>

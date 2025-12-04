@@ -2,41 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap');
-
 @layer base {
   :root {
-    --background: 200 20% 98%;
-    --foreground: 200 50% 10%;
+    --background: 140 100% 98%;
+    --foreground: 186 100% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 200 50% 10%;
+    --card-foreground: 186 100% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 200 50% 10%;
+    --popover-foreground: 186 100% 11%;
 
-    --primary: 174 62% 38%;
+    --primary: 183 100% 23%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 20% 94%;
-    --secondary-foreground: 200 50% 15%;
+    --secondary: 140 20% 96%;
+    --secondary-foreground: 186 100% 11%;
 
-    --muted: 200 15% 92%;
-    --muted-foreground: 200 15% 45%;
+    --muted: 140 15% 94%;
+    --muted-foreground: 186 30% 40%;
 
-    --accent: 15 85% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 171 64% 55%;
+    --accent-foreground: 186 100% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 200 20% 88%;
-    --input: 200 20% 88%;
-    --ring: 174 62% 38%;
+    --border: 140 20% 90%;
+    --input: 140 20% 90%;
+    --ring: 183 100% 23%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --success: 160 60% 45%;
+    --success: 171 64% 55%;
     --success-foreground: 0 0% 100%;
 
     --sidebar-background: 0 0% 98%;
@@ -50,35 +48,35 @@
   }
 
   .dark {
-    --background: 200 30% 8%;
-    --foreground: 200 15% 95%;
+    --background: 186 50% 6%;
+    --foreground: 140 100% 98%;
 
-    --card: 200 25% 12%;
-    --card-foreground: 200 15% 95%;
+    --card: 186 40% 10%;
+    --card-foreground: 140 100% 98%;
 
-    --popover: 200 25% 12%;
-    --popover-foreground: 200 15% 95%;
+    --popover: 186 40% 10%;
+    --popover-foreground: 140 100% 98%;
 
-    --primary: 174 62% 45%;
+    --primary: 183 80% 35%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 20% 18%;
-    --secondary-foreground: 200 15% 90%;
+    --secondary: 186 30% 15%;
+    --secondary-foreground: 140 80% 95%;
 
-    --muted: 200 20% 20%;
-    --muted-foreground: 200 15% 60%;
+    --muted: 186 25% 18%;
+    --muted-foreground: 140 20% 65%;
 
-    --accent: 15 85% 55%;
+    --accent: 171 64% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 200 20% 20%;
-    --input: 200 20% 20%;
-    --ring: 174 62% 45%;
+    --border: 186 25% 18%;
+    --input: 186 25% 18%;
+    --ring: 183 80% 35%;
 
-    --success: 160 60% 40%;
+    --success: 171 64% 45%;
     --success-foreground: 0 0% 100%;
 
     --sidebar-background: 240 5.9% 10%;
@@ -100,25 +98,11 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
-  }
-}
-
-@layer utilities {
-  .font-display {
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .font-sans {
-    font-family: 'DM Sans', sans-serif;
-  }
 }
 
 @layer components {
   .habit-check {
-    @apply relative w-10 h-10 rounded-full border-2 border-border cursor-pointer transition-all duration-300 ease-out;
+    @apply relative w-10 h-10 rounded-full border-2 border-border cursor-pointer transition-colors duration-200;
   }
 
   .habit-check.completed {
@@ -126,7 +110,7 @@
   }
 
   .habit-check:hover:not(.completed) {
-    @apply border-primary bg-primary/10;
+    @apply border-primary bg-primary/5;
   }
 
   .habit-check.completed::after {
@@ -139,40 +123,19 @@
   }
 
   .card-hover {
-    @apply transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1;
+    @apply transition-colors duration-200 hover:bg-muted/50;
   }
 }
 
-@keyframes check-bounce {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
 }
 
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
-
-.animate-check {
-  animation: check-bounce 0.3s ease-out;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.4s ease-out;
-}
-
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.1s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.2s; }
-.stagger-5 { animation-delay: 0.25s; }
