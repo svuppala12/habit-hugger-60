@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/Navbar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -14,6 +14,48 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+function AppContent() {
+  const location = useLocation();
+  const hideNavbar = location.pathname === '/auth';
+  
+  return (
+    <div className="min-h-screen">
+      {!hideNavbar && <Navbar />}
+      <main>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route 
+            path="/habits/new" 
+            element={
+              <ProtectedRoute>
+                <HabitForm />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/habits/:id" 
+            element={
+              <ProtectedRoute>
+                <HabitDetail />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/habits/:id/edit" 
+            element={
+              <ProtectedRoute>
+                <HabitForm />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -21,40 +63,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen bg-background">
-            <Navbar />
-            <main>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route 
-                  path="/habits/new" 
-                  element={
-                    <ProtectedRoute>
-                      <HabitForm />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/habits/:id" 
-                  element={
-                    <ProtectedRoute>
-                      <HabitDetail />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/habits/:id/edit" 
-                  element={
-                    <ProtectedRoute>
-                      <HabitForm />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-          </div>
+          <AppContent />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
