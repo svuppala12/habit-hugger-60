@@ -52,10 +52,10 @@ export default function Dashboard() {
   return (
     <div className="container max-w-2xl py-8 px-4">
       <header className="mb-8">
-        <h1 className="text-2xl font-semibold text-foreground">
+        <h1 className="text-2xl font-bold text-foreground tracking-tight">
           {getGreeting()}, {displayName}
         </h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1.5 leading-relaxed">
           {habits.length === 0 
             ? "Let's start building some habits."
             : `You've completed ${completedOnDate} of ${habits.length} habits${isToday(selectedDate) ? ' today' : ''}.`
@@ -65,14 +65,14 @@ export default function Dashboard() {
 
       {habits.length === 0 ? (
         <div className="text-center py-16">
-          <div className="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-xl bg-muted">
-            <Target className="w-8 h-8 text-muted-foreground" />
+          <div className="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-xl gradient-bg shadow-md">
+            <Target className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h2 className="text-lg font-semibold mb-2">No habits yet</h2>
-          <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
+          <h2 className="text-lg font-bold mb-2 tracking-tight">No habits yet</h2>
+          <p className="text-muted-foreground mb-6 max-w-sm mx-auto leading-relaxed">
             Create your first habit to start tracking your daily progress.
           </p>
-          <Button asChild>
+          <Button asChild className="gradient-bg border-0 shadow-sm">
             <Link to="/habits/new" className="flex items-center gap-2">
               <Plus className="w-4 h-4" />
               Create Your First Habit
@@ -96,20 +96,21 @@ export default function Dashboard() {
             ))}
           </div>
 
-          <div className="flex flex-col items-center gap-4 pt-4 border-t border-border">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={goToPreviousDay}>
+          <div className="flex flex-col items-center gap-4 pt-6 border-t border-border/60">
+            <div className="flex items-center gap-3 bg-card/80 rounded-full px-2 py-1 border border-border/50 shadow-sm">
+              <Button variant="ghost" size="icon" onClick={goToPreviousDay} className="rounded-full h-8 w-8">
                 <ChevronLeft className="w-4 h-4" />
               </Button>
               <button 
                 onClick={goToToday}
-                className="text-sm font-medium min-w-[140px] text-center hover:text-primary transition-colors"
+                className="text-sm font-semibold min-w-[140px] text-center hover:text-primary transition-colors tracking-tight"
               >
                 {isToday(selectedDate) ? 'Today' : format(selectedDate, 'EEEE, MMM d')}
               </button>
               <Button 
                 variant="ghost" 
-                size="icon" 
+                size="icon"
+                className="rounded-full h-8 w-8"
                 onClick={goToNextDay}
                 disabled={!canGoNext}
               >
@@ -117,7 +118,7 @@ export default function Dashboard() {
               </Button>
             </div>
             
-            <Button asChild variant="outline">
+            <Button asChild className="gradient-bg border-0 shadow-sm">
               <Link to="/habits/new" className="flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 Add Habit

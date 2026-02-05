@@ -175,12 +175,12 @@ export default function HabitForm() {
         </Link>
       </Button>
 
-      <Card>
+      <Card className="card-elevated border-border/50">
         <CardHeader>
-          <CardTitle className="text-xl font-semibold">
+          <CardTitle className="text-xl font-bold tracking-tight">
             {isEditing ? 'Edit Habit' : 'Create New Habit'}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="leading-relaxed">
             {isEditing 
               ? 'Update the details of your habit.' 
               : 'Add a new habit to start tracking.'}
@@ -189,7 +189,7 @@ export default function HabitForm() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name">Habit Name</Label>
+              <Label htmlFor="name" className="font-medium">Habit Name</Label>
               <Input
                 id="name"
                 placeholder="e.g., Morning meditation"
@@ -202,7 +202,7 @@ export default function HabitForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description (optional)</Label>
+              <Label htmlFor="description" className="font-medium">Description (optional)</Label>
               <Textarea
                 id="description"
                 placeholder="What does this habit involve?"
@@ -216,7 +216,7 @@ export default function HabitForm() {
             </div>
 
             <div className="space-y-3">
-              <Label>Frequency</Label>
+              <Label className="font-medium">Frequency</Label>
               <div className="flex flex-wrap gap-2">
                 {FREQUENCY_OPTIONS.slice(0, 3).map(option => (
                   <button
@@ -225,10 +225,10 @@ export default function HabitForm() {
                     onClick={() => handleFrequencyChange(option.value)}
                     disabled={loading}
                     className={cn(
-                      "px-3 py-1.5 text-sm rounded-md border transition-colors",
+                      "px-3 py-1.5 text-sm font-medium rounded-md border transition-all",
                       frequency === option.value
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-background text-foreground border-border hover:bg-muted"
+                        ? "gradient-bg text-primary-foreground border-transparent shadow-sm"
+                        : "bg-card text-foreground border-border hover:bg-muted"
                     )}
                   >
                     {option.label}
@@ -244,10 +244,10 @@ export default function HabitForm() {
                     onClick={() => toggleDay(day.key)}
                     disabled={loading}
                     className={cn(
-                      "w-9 h-9 rounded-full text-sm font-medium transition-colors",
+                      "w-9 h-9 rounded-full text-sm font-semibold transition-all",
                       selectedDays.includes(day.key)
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        ? "gradient-bg text-primary-foreground shadow-sm"
+                        : "bg-secondary text-muted-foreground hover:bg-muted"
                     )}
                   >
                     {day.label}
@@ -257,7 +257,7 @@ export default function HabitForm() {
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Button type="submit" className="flex-1" disabled={loading}>
+              <Button type="submit" className="flex-1 gradient-bg border-0 shadow-sm" disabled={loading}>
                 {loading ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Habit'}
               </Button>
               <Button 

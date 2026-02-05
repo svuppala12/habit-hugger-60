@@ -13,13 +13,13 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full border-b border-border/60 bg-card/80 backdrop-blur-md supports-[backdrop-filter]:bg-card/70">
       <div className="container flex h-14 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg gradient-bg text-primary-foreground shadow-sm">
             <Target className="w-4 h-4" />
           </div>
-          <span className="font-semibold">HabitFlow</span>
+          <span className="font-semibold text-foreground tracking-tight">HabitFlow</span>
         </Link>
 
         <div className="flex items-center gap-2">
@@ -34,7 +34,7 @@ export function Navbar() {
               <span className="hidden sm:inline">Logout</span>
             </Button>
           ) : (
-            <Button asChild variant="default" size="sm">
+            <Button asChild size="sm" className="gradient-bg border-0 shadow-sm">
               <Link to="/auth">Sign In</Link>
             </Button>
           )}

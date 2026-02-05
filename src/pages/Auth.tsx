@@ -111,22 +111,22 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground mb-4">
+          <div className="flex items-center justify-center w-12 h-12 rounded-xl gradient-bg text-primary-foreground mb-4 shadow-md">
             <Target className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-semibold">HabitFlow</h1>
-          <p className="text-muted-foreground text-sm mt-1">Build better habits, one day at a time</p>
+          <h1 className="text-2xl font-bold tracking-tight">HabitFlow</h1>
+          <p className="text-muted-foreground text-sm mt-1.5 leading-relaxed">Build better habits, one day at a time</p>
         </div>
 
-        <Card className="border-border">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="text-xl font-semibold">
+        <Card className="card-elevated border-border/50">
+          <CardHeader className="text-center pb-5">
+            <CardTitle className="text-xl font-bold tracking-tight">
               {isLogin ? 'Welcome back' : 'Create your account'}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="leading-relaxed">
               {isLogin ? 'Sign in to continue tracking your habits' : 'Start your journey to better habits'}
             </CardDescription>
           </CardHeader>
@@ -135,7 +135,7 @@ export default function Auth() {
               {!isLogin && (
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName">First name</Label>
+                    <Label htmlFor="firstName" className="font-medium">First name</Label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
@@ -151,7 +151,7 @@ export default function Auth() {
                     {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName">Last name</Label>
+                    <Label htmlFor="lastName" className="font-medium">Last name</Label>
                     <Input
                       id="lastName"
                       type="text"
@@ -165,7 +165,7 @@ export default function Auth() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="font-medium">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
@@ -182,7 +182,7 @@ export default function Auth() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="font-medium">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
@@ -197,7 +197,7 @@ export default function Auth() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -207,7 +207,7 @@ export default function Auth() {
 
               {!isLogin && (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Label htmlFor="confirmPassword" className="font-medium">Confirm Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
@@ -224,7 +224,7 @@ export default function Auth() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full gradient-bg border-0 shadow-sm" disabled={loading}>
                 {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
               </Button>
             </form>
@@ -236,7 +236,7 @@ export default function Auth() {
                   setIsLogin(!isLogin);
                   setErrors({});
                 }}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium"
               >
                 {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
               </button>
